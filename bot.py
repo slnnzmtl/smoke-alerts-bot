@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, Job, CallbackQueryHandler, CommandHandler, Filters, MessageHandler
+from telegram.ext import Updater, CommandHandler, Job, CallbackQueryHandler, MessageHandler
 
 load_dotenv()
 
