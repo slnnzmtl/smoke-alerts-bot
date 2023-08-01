@@ -1,7 +1,7 @@
 import json
 import os
 from dotenv import load_dotenv
-
+import requests
 import telegram
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, Job, CallbackQueryHandler, MessageHandler
