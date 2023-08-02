@@ -29,6 +29,8 @@ def check_smoke_status(context):
     response = requests.get(api_endpoint)
     data = response.json()
 
+    print(data)
+
     for camera in data:
         if camera['smoke_detected']:
             for user_id, chat_id in subscribed_users.items():
@@ -71,7 +73,7 @@ def main():
     dp.add_handler(CallbackQueryHandler(handle_button_press))
 
     job_queue = updater.job_queue
-    job_queue.run_repeating(check_smoke_status, interval=10, first=0)
+    job_queue.run_repeating(check_smoke_status, interval=30, first=0)
 
     updater.start_polling()
     updater.idle()
