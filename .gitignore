@@ -1,2 +1,5 @@
 .env 
 bot2.py
+database/alerts_log
+response.py
+__pycache__
