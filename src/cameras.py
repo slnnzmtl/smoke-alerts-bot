@@ -32,7 +32,6 @@ def fetch_cameras(cameras):
             response = session.get(path)
             response.raise_for_status()
             json_data = response.json()
-            print(json_data['camera_name'])
             camera_data = json_data
         except requests.exceptions.RequestException as e:
             print(f"Error during request: {e}")

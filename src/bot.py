@@ -59,7 +59,7 @@ def main():
     updater = Updater(bot_token, use_context=True)
     dp = updater.dispatcher
 
-    dp.add_handler(CommandHandler("dev", start))
+    dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("stop", stop))
     dp.add_handler(CommandHandler("confidence", handle_confidence))
     dp.add_handler(CommandHandler("test", check))
