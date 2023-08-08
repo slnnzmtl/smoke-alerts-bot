@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 db_path = os.environ.get('DATABASE_PATH')
+default_confidence = os.environ.get('DEFAULT_CONFIDENCE')
 
 def load_subscribers():
     try:
@@ -23,11 +24,17 @@ def save_subscribers(subscribers):
     with open(f"../{db_path}", 'w') as file:
         json.dump(data, file, indent=4)
 
-def add_subscriber(user_id, chat_id):
+def add_subscriber(user_id, chat_id, username):
     current_time = datetime.datetime.now()
     subscribed_on = current_time.strftime("%Y-%m-%d %H:%M:%S")
     subscribers = load_subscribers()
-    subscribers.append({ "user_id": user_id, "chat_id": chat_id, "subscribed_on": subscribed_on })
+    subscribers.append({ 
+        "user_id": user_id,
+        "chat_id": chat_id, 
+        "username": username,
+        "subscribed_on": subscribed_on, 
+        "confidence": default_confidence 
+    })
 
     save_subscribers(subscribers)
 

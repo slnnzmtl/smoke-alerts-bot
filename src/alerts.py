@@ -50,7 +50,7 @@ def send_alert(context, chat_id, camera):
     name = camera['camera_name']
     address = camera['camera_address']
     confidence = camera['confidence']
-    image = base64.b64decode(camera['image'])
+    image = base64.b64decode(camera.get('image', ''))
 
     callback_success = json.dumps({ "t": address })
     callback_failure = json.dumps({ "f": address })
@@ -61,13 +61,20 @@ def send_alert(context, chat_id, camera):
     ]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    context.bot.send_photo(
-        chat_id=chat_id,
-        photo=BytesIO(image),
-        caption=f'{name}\nConfidence: {confidence}', 
-        parse_mode=ParseMode.HTML,
-        reply_markup=reply_markup
-    )
+    if (image):
+        context.bot.send_photo(
+            chat_id=chat_id,
+            photo=BytesIO(image),
+            caption=f'{name}\nConfidence: {confidence}', 
+            parse_mode=ParseMode.HTML,
+            reply_markup=reply_markup
+        )
+    else:
+        context.bot.send_message(
+            chat_id=chat_id,
+            text=f'{name}\nConfidence: {confidence}',
+            reply_markup=reply_markup
+        )
 
     if chat_id not in pushed_alerts:
         pushed_alerts[chat_id] = {}

@@ -4,7 +4,6 @@ sys.path.append('..')
 import os
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
-from response import response
 from subscribers import load_subscribers, add_subscriber, remove_subscriber, set_confidence
 from alerts import handle_alert_verification
 from cameras import check_camera_status
@@ -18,12 +17,14 @@ max_confidence = 1
 min_confidence = 0
 
 def start(update, context):
-    user_id = update.effective_user.id
     chat_id = update.message.chat_id
+    user = update.effective_user
+    user_id = user.id
+    username = user.username
     subscribers = load_subscribers()
 
     if not any(subscriber['user_id'] == user_id for subscriber in subscribers):
-        add_subscriber(user_id, chat_id)
+        add_subscriber(chat_id, user_id, username)
         update.message.reply_text("You are now subscribed to smoke alerts.")
     else:
         update.message.reply_text("You already subscribed.")
@@ -51,19 +52,23 @@ def handle_confidence(update, context):
     else:
         set_confidence(chat_id, value)
 
+def check(update, context):
+    check_camera_status(context)
+
 def main():
     updater = Updater(bot_token, use_context=True)
     dp = updater.dispatcher
 
-    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("dev", start))
     dp.add_handler(CommandHandler("stop", stop))
     dp.add_handler(CommandHandler("confidence", handle_confidence))
+    dp.add_handler(CommandHandler("test", check))
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_confidence))
 
     dp.add_handler(CallbackQueryHandler(handle_alert_verification))
 
     job_queue = updater.job_queue
-    job_queue.run_repeating(check_camera_status, interval=30, first=1)
+    job_queue.run_repeating(check_camera_status, interval=40, first=0)
 
     updater.start_polling()
     updater.idle()
